@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class dataTransformation:
     def __init__(self, df):
@@ -112,7 +113,7 @@ class dataTransformation:
     def reorderCols(self):
         self.df = self.df[[
             #about the employee
-            'employeecount','EmployeeNumber','Age','Gender','MaritalStatus','Department',
+            'employeeCount','EmployeeNumber','Age','Gender','MaritalStatus','Department',
             'Education','educationChr','EducationField',
             # about the job
             'BusinessTravelInt', 'BusinessTravel','DistanceFromHome',
@@ -134,3 +135,4 @@ class dataTransformation:
         self.addEmployeeCountCol()
         self.mappingCols()
         self.reorderCols()
+        return self.df
