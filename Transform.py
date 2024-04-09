@@ -109,11 +109,33 @@ class dataTransformation:
         self.df['WorkLifeBalanceChr'] = self.df['WorkLifeBalance'].map(mapWorkLifeBalance)
         self.df['BusinessTravelInt'] = self.df['BusinessTravel'].map(mapBusinessTravel)
         self.df['AttritionInt'] = self.df['Attrition'].map(mapAttrition)
+    
+    def ageBucket(self):
+        conditions = [
+            (self.df['Age'] <= 25),
+            (self.df['Age'] > 25) & (self.df['Age'] <= 35),
+            (self.df['Age'] > 35) & (self.df['Age'] <= 45),
+            (self.df['Age'] > 45) & (self.df['Age'] <= 55),
+            (self.df['Age'] > 55)
+            ]
+        results = ['18-25', '26-35', '36-45', '46-55','55+']
+        self.df['ageBucket'] = np.select(conditions, results)
+
+    def monthlyIncomeBucket(self):
+        conditions = [
+            (self.df['MonthlyIncome'] <= 5000),
+            (self.df['MonthlyIncome'] > 5000) & (self.df['MonthlyIncome'] <= 10000),
+            (self.df['MonthlyIncome'] > 10000) & (self.df['MonthlyIncome'] <= 15000),
+            (self.df['MonthlyIncome'] > 15000)
+            ]
+        results = ['Below 5k', '5-10k', '10-15k', 'Above 15k']
+        self.df['monthlyIncomeBucket'] = np.select(conditions, results)    
+
 
     def reorderCols(self):
         self.df = self.df[[
             #about the employee
-            'employeeCount','EmployeeNumber','Age','Gender','MaritalStatus','Department',
+            'employeeCount','EmployeeNumber','Age','ageBucket','Gender','MaritalStatus','Department',
             'Education','educationChr','EducationField',
             # about the job
             'BusinessTravelInt', 'BusinessTravel','DistanceFromHome',
@@ -123,7 +145,7 @@ class dataTransformation:
             # indicator
             'WorkLifeBalance','WorkLifeBalanceChr',
             'JobSatisfaction','JobSatisfactionChr',
-            'MonthlyIncome','OverTime', 'PercentSalaryHike',
+            'MonthlyIncome','monthlyIncomeBucket','OverTime', 'PercentSalaryHike',
             # KPI
             'RelationshipSatisfaction','RelationshipSatisfactionChr',
             'PerformanceRating','PerformanceRatingChr',
@@ -134,5 +156,7 @@ class dataTransformation:
         self.deleteCols()
         self.addEmployeeCountCol()
         self.mappingCols()
+        self.ageBucket()
+        self.monthlyIncomeBucket()
         self.reorderCols()
         return self.df
