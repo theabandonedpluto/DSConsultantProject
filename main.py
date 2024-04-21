@@ -3,6 +3,7 @@ import numpy as np
 import Extract
 import Transform
 import CorrMatrix
+import LRModel
 import Load
 
 def main():
@@ -17,9 +18,12 @@ def main():
     # correlation matrix
     df_corrmatrix = CorrMatrix.corrMatrix(transformedDf)
 
+    # simple LR model
+    LRSummaryModel = LRModel.LRModelGenerator(transformedDf)
+
     # load
     outputFile = 'cleanedData/HRDfFinished.xlsx'
-    loadResult = Load.loadData(transformedDf, df_corrmatrix, outputFile)
+    loadResult = Load.loadData(transformedDf, df_corrmatrix, LRSummaryModel, outputFile)
 
     if loadResult:
         print('ETL process completed successfully')
